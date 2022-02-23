@@ -1,28 +1,38 @@
 import React, { useState } from 'react';
 import RButton from '../UI/RButton/RButton';
 import RInput from '../UI/RInput/RInput';
+import './PostForm.scss';
 
 export default function PostForm(props) {
-  const [post, setPost] = useState({ title: '', desc: '' });
+  const [post, setPost] = useState({
+    title: '', desc: '', complete: false, color: '#000000',
+  });
   const { createPost } = props;
   const addNewPost = (event) => {
     event.preventDefault();
-    if (post.title === '' || post.desc === '') {
+    if (post.title === '') {
       return;
     }
     const newPost = {
       ...post,
       id: Date.now(),
+      complete: false,
     };
     createPost(newPost);
-    setPost({ ...post, title: '', desc: '' });
+    setPost({
+      ...post, title: '', desc: '', color: '#000000',
+    });
   };
 
   return (
-    <form className="app__form">
+    <form onSubmit={addNewPost} className="post-form">
       <RInput value={post.title} onChange={(event) => setPost({ ...post, title: event.target.value })} placeholder="Введите название" />
       <RInput value={post.desc} onChange={(event) => setPost({ ...post, desc: event.target.value })} placeholder="Введите описание" />
-      <RButton onClick={addNewPost}>Создать пост</RButton>
+      <input type="submit" hidden />
+      <div className="fost-form__buttons">
+        <RButton onClick={addNewPost}>Создать</RButton>
+        <input value={post.color} onChange={(event) => setPost({ ...post, color: event.target.value })} className="post-form__color-input" type="color" />
+      </div>
     </form>
   );
 }

@@ -35,11 +35,6 @@ $main-font: 'Exo 2', sans-serif;
     margin-bottom: 20px;
 }
 
-.app__form {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-bottom: 20px;
-    border: 1px solid black;
+.app__no-posts {
+    font-size: 24px;
 }
