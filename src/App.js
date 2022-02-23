@@ -33,7 +33,7 @@ function App() {
         {
           posts.length > 0
             ? <PostList posts={posts} removePost={removePost} switchComplete={switchComplete} />
-            : <span className="app__no-posts">Посты не найдены</span>
+            : <span className="app__no-posts">Тудухи не найдены</span>
         }
       </div>
     </div>
