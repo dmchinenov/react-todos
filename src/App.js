@@ -48,11 +48,15 @@ function App() {
     }
   };
 
+  const searchPost = (value) => {
+    setPosts(posts.filter((post) => post.title.includes(value) || post.desc.includes(value)));
+  };
+
   return (
     <div className="App">
       <div className="app__container">
         <h1 className="app__title">ТУДУХА</h1>
-        <PostForm createPost={createPost} />
+        <PostForm createPost={createPost} searchPost={searchPost} />
         {
           posts.length > 0
             ? (

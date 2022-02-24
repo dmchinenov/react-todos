@@ -3,7 +3,7 @@ import RButton from '../UI/RButton/RButton';
 import RInput from '../UI/RInput/RInput';
 import './PostForm.scss';
 
-export default function PostForm({ createPost }) {
+export default function PostForm({ createPost, searchPost }) {
   const [post, setPost] = useState({
     title: '', desc: '', complete: false, color: '#000000',
   });
@@ -32,6 +32,7 @@ export default function PostForm({ createPost }) {
       <div className="fost-form__buttons">
         <RButton onClick={addNewPost}>Создать</RButton>
         <input value={post.color} onChange={(event) => setPost({ ...post, color: event.target.value })} className="post-form__color-input" type="color" />
+        <RInput onChange={(event) => searchPost(event.target.value)} placeholder="Искать" />
       </div>
     </form>
   );
