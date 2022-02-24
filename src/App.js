@@ -5,51 +5,61 @@ import RSelect from './components/UI/RSelect/RSelect';
 import './index.scss';
 
 function App() {
-  const [posts, setPosts] = useState([]);
+  const [allPosts, setAllPosts] = useState([]);
+  const [searchValue, setSearchValue] = useState('');
+  const [selectedSort, setSelectedSort] = useState({ value: '', name: 'Сортировать по' });
+
   const createPost = (post) => {
-    setPosts([...posts, post]);
+    setAllPosts([...allPosts, post]);
   };
 
   const removePost = (post) => {
-    setPosts(posts.filter((el) => el.timestamp !== post.timestamp));
+    setAllPosts(allPosts.filter((el) => el.timestamp !== post.timestamp));
   };
 
   const switchComplete = (post, value) => {
-    const newPosts = posts.map((el) => {
+    const newAllPosts = allPosts.map((el) => {
       if (el.timestamp === post.timestamp) {
-        const newel = el;
-        newel.complete = value;
-        return newel;
+        const editPost = el;
+        editPost.complete = value;
+        return editPost;
       }
       return el;
     });
-    setPosts(newPosts);
+    setAllPosts(newAllPosts);
   };
 
-  const filterOptions = [
-    { value: 'timestamp', name: 'По дате' },
-    { value: 'title', name: 'По названию' },
+  const sortOptions = [
+    { value: 'timestamp', name: 'По дате', dir: 0 },
+    { value: 'title', name: 'По названию', dir: 0 },
   ];
 
-  const [selectedSort, setSelectedSort] = useState({ value: '', name: 'Сортировать по' });
+  const getSortedPosts = () => {
+    if (selectedSort.dir) {
+      return allPosts.reverse();
+    }
+    if (selectedSort.value === 'timestamp') {
+      return allPosts.sort((a, b) => a.timestamp - b.timestamp);
+    }
+    if (selectedSort.value === 'title') {
+      return allPosts.sort((a, b) => a.title.localeCompare(b.title));
+    }
+    return allPosts;
+  };
+
+  const filteredPosts = () => getSortedPosts().filter((post) => post.title.toLowerCase().includes(searchValue.toLowerCase())
+  || post.desc.toLowerCase().includes(searchValue.toLowerCase()));
+
   const sortPosts = (value) => {
-    const newSort = filterOptions.find((sort) => sort.value === value);
+    const newSort = sortOptions.find((sort) => sort.value === value);
+    if (newSort.value === selectedSort.value) {
+      newSort.dir = !newSort.dir;
+    }
     setSelectedSort(newSort);
-    if (value === selectedSort.value) {
-      setPosts(posts.reverse());
-      return;
-    }
-    if (value === 'timestamp') {
-      setPosts(posts.sort((a, b) => a[newSort.value] - b[newSort.value]));
-      return;
-    }
-    if (value === 'title') {
-      setPosts(posts.sort((a, b) => a[newSort.value].localeCompare(b[newSort.value])));
-    }
   };
 
   const searchPost = (value) => {
-    setPosts(posts.filter((post) => post.title.includes(value) || post.desc.includes(value)));
+    setSearchValue(value);
   };
 
   return (
@@ -58,11 +68,11 @@ function App() {
         <h1 className="app__title">ТУДУХА</h1>
         <PostForm createPost={createPost} searchPost={searchPost} />
         {
-          posts.length > 0
+          filteredPosts().length > 0
             ? (
-              <div className="app__filter-select">
+              <div className="app__filters-block">
                 <RSelect
-                  options={filterOptions}
+                  options={sortOptions}
                   placeholder="Сортировать по"
                   className="app__filter-select"
                   selectedSort={selectedSort}
@@ -73,8 +83,14 @@ function App() {
             : ''
         }
         {
-          posts.length > 0
-            ? <PostList posts={posts} removePost={removePost} switchComplete={switchComplete} />
+          filteredPosts().length > 0
+            ? (
+              <PostList
+                sortedPosts={filteredPosts()}
+                removePost={removePost}
+                switchComplete={switchComplete}
+              />
+            )
             : <span className="app__no-posts">Тудухи не найдены</span>
         }
       </div>

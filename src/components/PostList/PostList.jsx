@@ -2,10 +2,10 @@ import React from 'react';
 import Post from '../Post/Post';
 import './PostList.scss';
 
-export default function PostList({ posts, removePost, switchComplete }) {
+export default function PostList({ sortedPosts, removePost, switchComplete }) {
   return (
     <div className="postList">
-      { posts.map((post) => (
+      { sortedPosts.map((post) => (
         <Post
           post={post}
           key={post.timestamp}
