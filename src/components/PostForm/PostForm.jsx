@@ -3,11 +3,10 @@ import RButton from '../UI/RButton/RButton';
 import RInput from '../UI/RInput/RInput';
 import './PostForm.scss';
 
-export default function PostForm(props) {
+export default function PostForm({ createPost }) {
   const [post, setPost] = useState({
     title: '', desc: '', complete: false, color: '#000000',
   });
-  const { createPost } = props;
   const addNewPost = (event) => {
     event.preventDefault();
     if (post.title === '') {
@@ -15,7 +14,8 @@ export default function PostForm(props) {
     }
     const newPost = {
       ...post,
-      id: Date.now(),
+      timestamp: Date.now(),
+      date: new Date().toLocaleString(),
       complete: false,
     };
     createPost(newPost);

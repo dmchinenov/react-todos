@@ -16,6 +16,7 @@ export default function Post(props) {
       <div className="post__text-block">
         <span className="post__title">{post.title}</span>
         <span className="post__desc">{post.desc}</span>
+        <span className="post__date">{post.date}</span>
       </div>
       <div className="post__button-block">
         <RButton onClick={() => removePost(post)}>Удалить</RButton>
