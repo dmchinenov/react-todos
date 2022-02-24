@@ -47,10 +47,14 @@ function App() {
     return allPosts;
   };
 
-  const filteredPosts = () => getSortedPosts().filter((post) => post.title.toLowerCase().includes(searchValue.toLowerCase())
-  || post.desc.toLowerCase().includes(searchValue.toLowerCase()));
+  const filteredPosts = () => {
+    if (searchValue !== '') {
+      return getSortedPosts().filter((post) => post.title.toLowerCase().includes(searchValue.toLowerCase()));
+    }
+    return getSortedPosts();
+  };
 
-  const sortPosts = (value) => {
+  const setSortPosts = (value) => {
     const newSort = sortOptions.find((sort) => sort.value === value);
     if (newSort.value === selectedSort.value) {
       newSort.dir = !newSort.dir;
@@ -76,7 +80,7 @@ function App() {
                   placeholder="Сортировать по"
                   className="app__filter-select"
                   selectedSort={selectedSort}
-                  sortPosts={sortPosts}
+                  setSortPost={setSortPosts}
                 />
               </div>
             )

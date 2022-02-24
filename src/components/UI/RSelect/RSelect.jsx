@@ -1,11 +1,11 @@
 import React from 'react';
 import './RSelect.scss';
 
-export default function RSelect({ options, sortPosts, selectedSort }) {
+export default function RSelect({ options, setSortPosts, selectedSort }) {
   return (
     <select
       name="select-filter-posts"
-      onChange={(event) => sortPosts(event.target.value)}
+      onChange={(event) => setSortPosts(event.target.value)}
       className="select"
       value={selectedSort.value}
     >
