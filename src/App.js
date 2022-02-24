@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import PostForm from './components/PostForm/PostForm';
 import PostList from './components/PostList/PostList';
 import RSelect from './components/UI/RSelect/RSelect';
@@ -34,7 +34,7 @@ function App() {
     { value: 'title', name: 'По названию', dir: 0 },
   ];
 
-  const getSortedPosts = () => {
+  const getSortedPosts = useMemo(() => {
     if (selectedSort.dir) {
       return allPosts.reverse();
     }
@@ -45,14 +45,9 @@ function App() {
       return allPosts.sort((a, b) => a.title.localeCompare(b.title));
     }
     return allPosts;
-  };
+  }, [selectedSort, allPosts]);
 
-  const filteredPosts = () => {
-    if (searchValue !== '') {
-      return getSortedPosts().filter((post) => post.title.toLowerCase().includes(searchValue.toLowerCase()));
-    }
-    return getSortedPosts();
-  };
+  const filteredPosts = useMemo(() => getSortedPosts.filter((post) => post.title.toLowerCase().includes(searchValue.toLowerCase())), [getSortedPosts, selectedSort, searchValue]);
 
   const setSortPosts = (value) => {
     const newSort = sortOptions.find((sort) => sort.value === value);
@@ -72,7 +67,7 @@ function App() {
         <h1 className="app__title">ТУДУХА</h1>
         <PostForm createPost={createPost} searchPost={searchPost} />
         {
-          filteredPosts().length > 0
+          filteredPosts.length > 0
             ? (
               <div className="app__filters-block">
                 <RSelect
@@ -80,23 +75,17 @@ function App() {
                   placeholder="Сортировать по"
                   className="app__filter-select"
                   selectedSort={selectedSort}
-                  setSortPost={setSortPosts}
+                  setSortPosts={setSortPosts}
                 />
               </div>
             )
             : ''
         }
-        {
-          filteredPosts().length > 0
-            ? (
-              <PostList
-                sortedPosts={filteredPosts()}
-                removePost={removePost}
-                switchComplete={switchComplete}
-              />
-            )
-            : <span className="app__no-posts">Тудухи не найдены</span>
-        }
+        <PostList
+          sortedPosts={filteredPosts}
+          removePost={removePost}
+          switchComplete={switchComplete}
+        />
       </div>
     </div>
   );
